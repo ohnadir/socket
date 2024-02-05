@@ -5,11 +5,21 @@ import User from '../utils/Users.json'
 import { useEffect } from 'react';
 import { io } from "socket.io-client";
 import { useMemo } from 'react';
+import { useNavigate } from "react-router-dom";
 
 const SingleChat = () => {
+    const user= true;
+    const navigate = useNavigate()
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
     const [socketID, setSocketId] = useState([]);
+
+    
+    useEffect(()=>{
+        if(!user){
+            return navigate('/login')
+        }
+    }, [user])
     // console.log(setSocketId)
     console.log(socketID)
     const [room, setRoom] = useState();
