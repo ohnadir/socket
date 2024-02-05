@@ -14,8 +14,8 @@ const io = new Server(server, {
     }
 });
 
-
 app.use(express.json());
+
 const userRoute = require("./src/routes/user");
 // user route 
 app.use("/user", userRoute);  
@@ -26,17 +26,17 @@ app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
-let allid=[];
-
-
-io.on('connection', (socket) => {
-    allid.push(socket.id);
-    socket.emit("socket-ids", allid);
-    console.log('a user connected', socket.id);
-
-    socket.on('chat-message', (msg) => {
-        console.log(msg)
-        socket.emit('receive-message', msg);
+// Socket.io
+let users = [];
+io.on('connection', socket => {
+    console.log('User connected', socket.id);
+    socket.on('addUser', userId => {
+        const isUserExist = users.find(user => user.userId === userId);
+        if (!isUserExist) {
+            const user = { userId, socketId: socket.id };
+            users.push(user);
+            io.emit('getUsers', users);
+        }
     });
 });
 
