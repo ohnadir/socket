@@ -51,6 +51,24 @@ io.on('connection', async (socket) => {
             socket.to(receiverId).emit("receive-message", message);
         }
     });
+
+
+    socket.on('joinRoom', (room) => {
+        socket.join(room);
+    });
+    
+      // Handle leaving a room
+    socket.on('leaveRoom', (room) => {
+        socket.leave(room);
+    });
+    
+      // Handle receiving and broadcasting messages
+    socket.on('groupMessage', ({room, message, userId}) => {
+        io.to(room).emit('message', {
+            message: message,
+            userId : userId
+        });
+    });
 });
 
 
