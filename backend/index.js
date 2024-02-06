@@ -5,7 +5,7 @@ const app = express();
 const DB = require('./src/config/index')
 DB()
 const cors = require('cors');
-
+const  User = require("./src/Models/user");
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
@@ -22,26 +22,33 @@ app.use("*", cors({
 }));
 
 const userRoute = require("./src/routes/user");
-// user route 
+
+// route 
 app.use("/user", userRoute);  
-
-
-
 app.get("/", (req, res) => {
     res.send("Hello World!");
 });
 
+
 // Socket.io
 let users = [];
-io.on('connection', socket => {
+io.on('connection', async (socket) => {
     console.log('User connected', socket.id);
-    console.log(users)
-    socket.on('addUser', userId => {
+    socket.on('addUser', async (userId) => {
         const isUserExist = users.find(user => user.userId === userId);
         if (!isUserExist) {
-            const user = { userId, socketId: socket.id };
-            users.push(user);
+            if(userId){
+                const user = { userId, socketId: socket.id, user: await User.findById({_id: userId}) };
+                users.push(user);
+            }
             io.emit('getUsers', users);
+        }
+
+    });
+
+    socket.on('sendMessage',  async ({ receiverId, message }) => {
+        if (receiverId) {
+            socket.to(receiverId).emit("receive-message", message);
         }
     });
 });

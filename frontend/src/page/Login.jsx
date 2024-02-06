@@ -15,7 +15,7 @@ const Login = () => {
 
     const handleSubmit=(e)=>{
         e.preventDefault();
-        axios.post('http://localhost:8080/user/login', {auth})
+        axios.post('http://localhost:8080/user/login', {...auth})
         .then(function (response) {
             if(response?.data?.user?._id){
                 localStorage.setItem('user', JSON.stringify(response?.data?.user))
