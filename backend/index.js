@@ -46,9 +46,12 @@ io.on('connection', async (socket) => {
 
     });
 
-    socket.on('sendMessage',  async ({ receiverId, message }) => {
+    socket.on('sendMessage',  async ({ receiverId, message, userId }) => {
         if (receiverId) {
-            socket.to(receiverId).emit("receive-message", message);
+            socket.to(receiverId).emit("receive-message", {
+                message,
+                userId: userId
+            });
         }
     });
 

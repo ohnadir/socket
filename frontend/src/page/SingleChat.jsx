@@ -29,7 +29,8 @@ const SingleChat = () => {
         if(room){
             socket?.emit('sendMessage', {
                 receiverId: room,
-                message
+                message,
+                userId: user?._id
             });
             setMessage("")
         }else{
@@ -99,9 +100,9 @@ const SingleChat = () => {
                     </div>
                     <div className='grid grid-cols-1 gap-2 p-2'>
                         {
-                            allMessages?.map((message, index)=>
+                            allMessages?.map((item, index)=>
                                 <div key={index}>
-                                    <p className='bg-slate-300 rounded-sm p-1'>{message}</p>
+                                    <p className='bg-slate-300 rounded-sm p-1'>{item.message}</p>
                                 </div> 
                             )
                         }
