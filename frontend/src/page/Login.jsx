@@ -3,12 +3,31 @@ import { Input } from 'antd';
 import { FaRegUser } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
 import { GoLock } from "react-icons/go";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom"
 
 const Login = () => {
-    const [auth, setAuth] = useState()
+    const [auth, setAuth] = useState();
+    const navigate = useNavigate()
     const handleChange=(e)=>{
         setAuth(prev=>({...prev,  [e.target.name]: e.target.value}))
     }
+
+    const handleSubmit=(e)=>{
+        e.preventDefault();
+        axios.post('http://localhost:8080/user/login', {auth})
+        .then(function (response) {
+            if(response?.data?.user?._id){
+                localStorage.setItem('user', JSON.stringify(response?.data?.user))
+                localStorage.setItem("token", JSON.stringify(response?.data?.token))
+                navigate("/single")
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
     return (
         <div 
             className='
@@ -42,7 +61,7 @@ const Login = () => {
                 >
                     Login In
                 </h1>
-                <form action="">
+                <form onSubmit={handleSubmit}>
                     <Input
                         name='email'
                         onChange={handleChange} 
@@ -71,7 +90,6 @@ const Login = () => {
                             outline: "none",
                             marginBottom: "20px",
                         }}
-                        bordered={false}
                     />
                     <button type='submit' className='w-full bg-[#0071E3] h-[46px] text-white font-medium rounded-lg'>Register</button>
                 </form>

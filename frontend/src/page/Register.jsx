@@ -3,11 +3,30 @@ import { Input } from 'antd';
 import { FaRegUser } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
 import { GoLock } from "react-icons/go";
+import axios from 'axios';
+import { useNavigate } from "react-router-dom"
 
 const Register = () => {
     const [auth, setAuth] = useState()
+    const navigate = useNavigate()
     const handleChange=(e)=>{
         setAuth(prev=>({...prev,  [e.target.name]: e.target.value}))
+    }
+
+    const handleSubmit=(e)=>{
+        e.preventDefault();
+    
+        axios.post('http://localhost:8080/user/signup', {...auth})
+            .then(function (response) {
+                if(response?.data?.user?._id){
+                    localStorage.setItem('user', JSON.stringify(response?.data?.user))
+                    localStorage.setItem("token", JSON.stringify(response?.data?.token))
+                    navigate("/single")
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
     return (
         <div 
@@ -42,8 +61,9 @@ const Register = () => {
                 >
                     Register Here
                 </h1>
-                <form onSubmit={handleChange}>
-                    <Input 
+                <form onSubmit={handleSubmit}>
+                    <Input
+                        name='name' 
                         onChange={handleChange}
                         placeholder="Enter Your Full Name" 
                         prefix={<FaRegUser className='mr-2' size={24} color="#0071E3"/>} 
@@ -58,8 +78,9 @@ const Register = () => {
                         
                     />
                     <Input
+                        name='email'
                         onChange={handleChange} 
-                        placeholder="large size" 
+                        placeholder="Enter Your Email" 
                         prefix={<HiOutlineMail className='mr-2' size={24} color="#0071E3" />} 
                         style={{
                             border: "1px solid #0071E3",
@@ -71,9 +92,9 @@ const Register = () => {
                         }}
                     />
                     <Input.Password
+                        name='password'
                         onChange={handleChange}
-                        inputFontSize="18px" 
-                        placeholder="large size" 
+                        placeholder="Enter Your Password" 
                         prefix={<GoLock className='mr-2' size={24} color="#0071E3" />} 
                         style={{
                             border: "1px solid #0071E3",

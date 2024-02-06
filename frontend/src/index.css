@@ -8,3 +8,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ant-input-suffix{
+  font-size: 22px !important;
+  color: "#0071E3" !important;
+}
+
+.anticon, .anticon-eye-invisible, .ant-input-password-icon{
+  color: "#0071E3" !important;
+}
+.ant-input{
+  font-size: 16px !important;
+  font-weight: 400 !important;
+}

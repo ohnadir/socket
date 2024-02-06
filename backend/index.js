@@ -4,6 +4,7 @@ const { Server } = require("socket.io");
 const app = express();
 const DB = require('./src/config/index')
 DB()
+const cors = require('cors');
 
 const server = createServer(app);
 const io = new Server(server, {
@@ -15,6 +16,10 @@ const io = new Server(server, {
 });
 
 app.use(express.json());
+app.use("*", cors({
+    origin:true,
+    credentials : true
+}));
 
 const userRoute = require("./src/routes/user");
 // user route 
@@ -30,6 +35,7 @@ app.get("/", (req, res) => {
 let users = [];
 io.on('connection', socket => {
     console.log('User connected', socket.id);
+    console.log(users)
     socket.on('addUser', userId => {
         const isUserExist = users.find(user => user.userId === userId);
         if (!isUserExist) {

@@ -8,48 +8,30 @@ import { useMemo } from 'react';
 import { useNavigate } from "react-router-dom";
 
 const SingleChat = () => {
-    const user= true;
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
     const navigate = useNavigate()
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
     const [socketID, setSocketId] = useState([]);
-
     
     useEffect(()=>{
-        if(!user){
+        if(!user?._id){
             return navigate('/login')
         }
-    }, [user])
-    // console.log(setSocketId)
-    console.log(socketID)
-    const [room, setRoom] = useState();
+    }, [user?._id])
 
     const socket = useMemo(() => io("http://localhost:8080", {
         withCredentials: true,
       }),[]);
     
     const handleSubmit = () => {
-        // socket.emit("message", { message, room });
         socket.emit("chat-message", message);
-        // setMessage("");
     };
     useEffect(() => {
-        socket.on("socket-ids",(data)=>{
-            setSocketId(data);
-            
-        })
-        // socket.on("socket-id", (data) => {
-        //     setSocketId(() => [...socketID, data]);
-        // });
-
-        // socket.on("receive-message", (data) => {
-        //   setMessages((messages) => [...messages, data]);
-        // });
-        // socket.on("welcome", (s) => {
-        //     console.log(s + "2");
-        // });
-    
-        
+        socket?.emit('addUser', user?._id);
+		socket?.on('getUsers', users => {
+			console.log('activeUsers :>> ', users);
+		})
     }, []);
     return (
         <div className='max-w-screen-xl mx-auto p-4 flex justify-between gap-6'>
