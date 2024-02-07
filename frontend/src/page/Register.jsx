@@ -4,31 +4,37 @@ import { FaRegUser } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
 import { GoLock } from "react-icons/go";
 import { useNavigate, } from "react-router-dom"
-import { useDispatch } from "react-redux"
-import { register } from '../Redux/slice/authSlice';
+import { useRegisterMutation } from '../Redux/slice/anotherAuthSlice';
 
 const Register = () => {
-    const [auth, setAuth] = useState()
+    const [auth, setAuth] = useState();
+    const [ register, { isLoading, isError, data: user, error} ]= useRegisterMutation();
+
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const [messageApi, contextHolder] = message.useMessage();
+
     const handleChange=(e)=>{
         setAuth(prev=>({...prev,  [e.target.name]: e.target.value}))
     }
 
+    if(user?.token){
+        localStorage.setItem("token", JSON.stringify(user?.token))
+    }
+    
     const handleSubmit=(e)=>{
         e.preventDefault();
-        dispatch(register(auth)).unwrap()
-        .then(() => {
-            messageApi.success("Login Successful")
-            setTimeout(()=> {
-                navigate("/single");
-            }, 1000);
-        })
-        .catch(() => {
-            setLoading(false);
-        });
+        register(auth);
     }
+
+    useEffect(()=>{
+        if(user?.user?._id){
+            messageApi.success("Register Successful")
+            setTimeout(()=> {
+                navigate("/");
+            }, 1000);
+        }
+    }, [user?.user?._id]);
+
     return (
         <>
             {contextHolder}

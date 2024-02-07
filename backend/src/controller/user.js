@@ -89,8 +89,8 @@ exports.allUser = async (req, res) => {
     }
 };
 
-const jwtT = "RF_+d&RYCPiC-~&Q_sE?^Z1dxq|{i<k.Mcc13&]I-*TZb(O:8=m2m]SE0HGv)`R.XH@Z"
 exports.loadUser = async (req, res) => {
+    
     const token = req.params.token
     try {
         if (!token) {
@@ -101,7 +101,7 @@ exports.loadUser = async (req, res) => {
         }
         const decoded = jwt.verify(token, "RF_+d&RYCPiC-~&Q_sE?^Z1dxq|{i<k.Mcc13&]I-*TZb(O:8=m2m]SE0HGv)`R.XH@Z");
         const user = await User.findById({_id: decoded.id});
-        const tokenResult = jwtToken(user); 
+        const tokenResult = jwtToken(user);
         return res.status(200).json({ 
             status: "success",
             user: user,

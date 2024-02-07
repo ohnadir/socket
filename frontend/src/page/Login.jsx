@@ -3,36 +3,35 @@ import { Input, message } from 'antd';
 import { HiOutlineMail } from "react-icons/hi";
 import { GoLock } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
-import { login } from '../Redux/slice/authSlice';
-import { useDispatch, useSelector } from "react-redux";
+import { useLoginMutation } from '../Redux/slice/anotherAuthSlice';
 
 
 
 const Login = () => {
     const [auth, setAuth] = useState();
-    const {user} = useSelector((state) => state.auth);
-    const [loading, setLoading] = useState(false);
+    const [ login, { isLoading, isError, data: user, error} ]= useLoginMutation((data)=>console.log(data));
+    console.log(user)
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const [messageApi, contextHolder] = message.useMessage();
     
     const handleChange=(e)=>{
         setAuth(prev=>({...prev,  [e.target.name]: e.target.value}))
     }
-
+    if(user?.token){
+        localStorage.setItem("token", JSON.stringify(user?.token))
+    }
     const handleSubmit=(e)=>{
         e.preventDefault();
-        dispatch(login(auth)).unwrap()
-        .then(() => {
+        login(auth)
+    }
+    useEffect(()=>{
+        if(user?.user?._id){
             messageApi.success("Login Successful")
             setTimeout(()=> {
-                navigate("/single");
+                navigate("/");
             }, 1000);
-        })
-        .catch(() => {
-            setLoading(false);
-        });
-    }
+        }
+    }, [user?.user?._id])
 
     return (
         <>
@@ -99,7 +98,7 @@ const Login = () => {
                                 marginBottom: "20px",
                             }}
                         />
-                        <button type='submit' className='w-full bg-[#0071E3] h-[46px] text-white font-medium rounded-lg'>{ loading ? "loading" : "Login" }</button>
+                        <button type='submit' className='w-full bg-[#0071E3] h-[46px] text-white font-medium rounded-lg'>{ isLoading ? "loading" : "Login" }</button>
                     </form>
                 </div>
             </div>
