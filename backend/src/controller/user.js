@@ -35,7 +35,13 @@ exports.login = async (req, res) => {
     const { email, password } = req.body
     try {
         const user = await User.findOne({ email : email });
-        
+        if(!user){
+            req.send({
+                statusCode: 200,
+                status: "failed",
+                message: "Incorrect Credential"
+            })
+        }
         if(user.password !== password){
             return res.status(404).json({ 
                 status: "failed",
@@ -70,7 +76,6 @@ exports.allUser = async (req, res) => {
                message: "No User found at this moment" 
             });
         }
-        console.log("done")
         return res.status(200).json({ 
             status: "success",
             user: users,

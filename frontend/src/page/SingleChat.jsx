@@ -6,14 +6,14 @@ import { useEffect } from 'react';
 import { io } from "socket.io-client";
 import { useMemo } from 'react';
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 const SingleChat = () => {
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')))
+    const { user } = useSelector(state => state.auth);
     const navigate = useNavigate()
     const [message, setMessage] = useState('');
     const [users, setUsers] = useState([]);
     const [allMessages, setAllMessages]=useState([]);
-    console.log(allMessages)
     const filterUsers = users.filter(item => item.userId !== user._id);
     const [room, setRoom] = useState();
 
@@ -37,16 +37,17 @@ const SingleChat = () => {
             alert("Select Room")
         }
     };
-    
-    useEffect(() => {
-        socket?.emit('addUser', user?._id);
-		socket?.on('getUsers', users => {
-            setUsers(users)
-		})
-        socket?.on('receive-message', data => {
-            setAllMessages(prevMessages => [...prevMessages, data])
-		})
-    }, []);
+    if(user?._id){
+        useEffect(() => {
+            socket?.emit('addUser', user?._id);
+            socket?.on('getUsers', users => {
+                setUsers(users)
+            })
+            socket?.on('receive-message', data => {
+                setAllMessages(prevMessages => [...prevMessages, data])
+            })
+        }, []);
+    }
 
     return (
         <div 
