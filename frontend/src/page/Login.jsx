@@ -4,13 +4,12 @@ import { HiOutlineMail } from "react-icons/hi";
 import { GoLock } from "react-icons/go";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from '../Redux/slice/anotherAuthSlice';
-
+import Cookies from 'js-cookie';
 
 
 const Login = () => {
     const [auth, setAuth] = useState();
-    const [ login, { isLoading, isError, data: user, error} ]= useLoginMutation((data)=>console.log(data));
-    console.log(user)
+    const [ login, { isLoading, isError, data: user, error} ]= useLoginMutation();
     const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
     
@@ -18,7 +17,7 @@ const Login = () => {
         setAuth(prev=>({...prev,  [e.target.name]: e.target.value}))
     }
     if(user?.token){
-        localStorage.setItem("token", JSON.stringify(user?.token))
+        Cookies.set('token', (user?.token), { expires: 7 })
     }
     const handleSubmit=(e)=>{
         e.preventDefault();

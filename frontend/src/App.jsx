@@ -6,34 +6,29 @@ import Home from './page/Home';
 import Login from './page/Login';
 import Register from './page/Register';
 import { useLoadUserQuery } from './Redux/slice/anotherAuthSlice';
-import Cookies from 'js-cookie';
-
+import { SocketProvider } from './providers/Sockets';
+import WebRTC from './page/WebRTC';
+import Room from './page/Room';
 
 function App() {
-
-  const token = JSON.parse(localStorage.getItem("token"));
+  const { data: user} = useLoadUserQuery();
+  console.log(user)
   
-  const { data: user} = useLoadUserQuery(token);
-
-  if(user?.token){
-    Cookies.set('token', (user?.token), { expires: 7 })
-    console.log(user?.user)
-
-  }
-  const data = Cookies.get('token');
-  console.log(data);
-
   return (
     <>
       <div>
         <Header/>
-        <Routes>
-          <Route path='/' element={<Home/>}></Route>
-          <Route path='/single' element={<SingleChat/>}></Route>
-          <Route path='/group' element={<GroupChat/>}></Route>
-          <Route path='/login' element={<Login/>}></Route>
-          <Route path='/register' element={<Register/>}></Route>
-        </Routes>
+        {/* <SocketProvider> */}
+          <Routes>
+            <Route path='/' element={<Home/>}></Route>
+            <Route path='/single' element={<SingleChat/>}></Route>
+            <Route path='/group' element={<GroupChat/>}></Route>
+            <Route path='/login' element={<Login/>}></Route>
+            <Route path='/register' element={<Register/>}></Route>
+            <Route path='/rtc' element={<WebRTC/>}></Route>
+            <Route path='/room/:roomId' element={<Room/>}></Route>
+          </Routes>
+        {/* </SocketProvider> */}
       </div>
     </>
   )

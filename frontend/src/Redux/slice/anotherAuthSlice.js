@@ -1,7 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { baseUrl } from "../service/authService";
 import Cookies from 'js-cookie';
+const data = Cookies.get('token');
 
 export const authApiSlice = createApi({
     reducerPath: "auth",
@@ -9,7 +9,7 @@ export const authApiSlice = createApi({
     endpoints: (builder) => ({
         register: builder.mutation({
             query: (credentials) => ({
-                url: "/register",
+                url: "/signup",
                 method: "POST",
                 body: credentials
             })
@@ -22,13 +22,13 @@ export const authApiSlice = createApi({
             })
         }),
         loadUser: builder.query({
-            query: (token) => ({
-                url : `/me/${token}`,
+            query: () => ({
+                url : "/me",
                 method: "GET",
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
-                    'Cookie': Cookies.get('cookieName')
+                    'authorization': `Bearer ${data}`
                 },
                 withCredentials : true
             })

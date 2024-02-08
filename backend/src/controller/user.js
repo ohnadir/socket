@@ -3,7 +3,7 @@ const jwtToken = require("../utils/jwtToken");
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
-    const { email } = req.body
+    const { email } = req.body;
     try {
         if(email){
             const isEmailExist = await User.findOne({ email : email });
@@ -90,22 +90,14 @@ exports.allUser = async (req, res) => {
 };
 
 exports.loadUser = async (req, res) => {
-    
-    const token = req.params.token
     try {
-        if (!token) {
-            return res.status(401).json({ 
-               status: "failed",
-               message: "User not found by this token" 
-            });
+        if (!req.id) {
+            res.send("Token not Found");
         }
-        const decoded = jwt.verify(token, "RF_+d&RYCPiC-~&Q_sE?^Z1dxq|{i<k.Mcc13&]I-*TZb(O:8=m2m]SE0HGv)`R.XH@Z");
-        const user = await User.findById({_id: decoded.id});
-        const tokenResult = jwtToken(user);
+        const user = await User.findById({_id: req.id});
         return res.status(200).json({ 
             status: "success",
             user: user,
-            token: tokenResult,
             message: "Load User successfully" 
         });
     } catch (error) {

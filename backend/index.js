@@ -35,6 +35,8 @@ app.get("/", (req, res) => {
 
 // Socket.io
 let users = [];
+const emailToSocketMapping = new Map();
+const socketToEmailMapping = new Map();
 io.on('connection', async (socket) => {
     console.log('User connected', socket.id);
     socket.on('addUser', async (userId) => {
@@ -49,6 +51,27 @@ io.on('connection', async (socket) => {
 
     });
 
+    // join room
+    socket.on("join-room", (data)=>{
+        const { roomId, emailId } = data;
+        console.log('User', emailId, "Joined Room", roomId);
+        emailToSocketMapping.set(emailId, socket.id);
+        socketToEmailMapping.set(socket.id, emailId);
+        socket.join(roomId)
+        socket.emit("join-room", { roomId })
+        socket.broadcast.to(roomId).emit("user-joined", {emailId})
+    })
+
+    /* socket.on("call-user", data=>{
+        const { emailId, offer } = data;
+        console.log("call-user", emailId, offer)
+        const fromEmail = socketToEmailMapping.get(socket.id); 
+        const socketId = emailToSocketMapping.get(emailId);
+        console.log("incomming-call", fromEmail, offer)
+        socket.to(socketId).emit('incomming-call', { from : fromEmail, offer})
+    }) */
+
+    // send message
     socket.on('sendMessage',  async ({ receiverId, message, userId }) => {
         if (receiverId) {
             socket.to(receiverId).emit("receive-message", {

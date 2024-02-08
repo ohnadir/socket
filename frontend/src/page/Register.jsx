@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Input, message } from 'antd';
-import { FaRegUser } from "react-icons/fa6";
+import { FaAlgolia, FaRegUser } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
 import { GoLock } from "react-icons/go";
 import { useNavigate, } from "react-router-dom"
 import { useRegisterMutation } from '../Redux/slice/anotherAuthSlice';
-
+import Cookies from 'js-cookie';
 const Register = () => {
     const [auth, setAuth] = useState();
     const [ register, { isLoading, isError, data: user, error} ]= useRegisterMutation();
@@ -18,11 +18,12 @@ const Register = () => {
     }
 
     if(user?.token){
-        localStorage.setItem("token", JSON.stringify(user?.token))
+        Cookies.set('token', (user?.token), { expires: 7 })
     }
     
     const handleSubmit=(e)=>{
         e.preventDefault();
+        console.log(auth);
         register(auth);
     }
 
