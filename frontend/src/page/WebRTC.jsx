@@ -38,10 +38,11 @@ const WebRTC = () => {
         navigate(`/room/${roomId}`)
     }
     useEffect(() => {
-        socket.on('join-room', data=>{ 
+        socket.on('joined-room', data=>{ 
             handleRoomJoined(data)
         } )
     }, [socket]);
+
     return (
         <div 
             className='

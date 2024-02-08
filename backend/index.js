@@ -57,19 +57,20 @@ io.on('connection', async (socket) => {
         console.log('User', emailId, "Joined Room", roomId);
         emailToSocketMapping.set(emailId, socket.id);
         socketToEmailMapping.set(socket.id, emailId);
-        socket.join(roomId)
-        socket.emit("join-room", { roomId })
-        socket.broadcast.to(roomId).emit("user-joined", {emailId})
+        socket.emit("joined-room", { roomId });
+        if(roomId){
+            socket.broadcast.emit("user-joined", { emailId });
+        }
     })
 
-    /* socket.on("call-user", data=>{
+    socket.on("call-user", data=>{
         const { emailId, offer } = data;
-        console.log("call-user", emailId, offer)
         const fromEmail = socketToEmailMapping.get(socket.id); 
         const socketId = emailToSocketMapping.get(emailId);
+        console.log(socketId);
         console.log("incomming-call", fromEmail, offer)
         socket.to(socketId).emit('incomming-call', { from : fromEmail, offer})
-    }) */
+    })
 
     // send message
     socket.on('sendMessage',  async ({ receiverId, message, userId }) => {

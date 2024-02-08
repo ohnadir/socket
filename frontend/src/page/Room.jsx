@@ -20,11 +20,10 @@ const Room = () => {
         return offer;
     }
 
-    const handleNewUserJoined = useCallback ( async(data)=>{
+    const handleNewUserJoined = useCallback ( async (data) =>{
         const { emailId } = data;
-        console.log(emailId);
-        const offer = await createOffer()
-        socket.emit('call-user', emailId, offer)
+        const offer = await createOffer();
+        socket.emit('call-user', {emailId, offer: offer})
     }, [createOffer, socket]);
 
     const handleIncommingCall = useCallback((data)=>{
@@ -35,19 +34,19 @@ const Room = () => {
     useEffect(() => {
 
         socket.on('user-joined', data=>{ 
-            console.log("user" + data)
-            // handleNewUserJoined(data)
+            console.log(data);
+            handleNewUserJoined(data)
         })
-        socket.on("join-room", data=>{ 
+        /* socket.on("join-room", data=>{ 
             console.log("room" + data )
             // handleNewUserJoined(data)
         })
         socket.on("incomming-call", data=>{
             console.log(data);
             handleIncommingCall(data);
-        })
+        }) */
 
-    }, [socket]);
+    }, []);
 
     return (
         <div>Room</div>
