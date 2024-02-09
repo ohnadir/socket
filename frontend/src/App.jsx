@@ -5,20 +5,18 @@ import GroupChat from './page/GroupChat';
 import Home from './page/Home';
 import Login from './page/Login';
 import Register from './page/Register';
-import { useLoadUserQuery } from './Redux/slice/anotherAuthSlice';
 import { SocketProvider } from './providers/Sockets';
+import { UserProvider } from './providers/User';
 import WebRTC from './page/WebRTC';
 import Room from './page/Room';
 
 function App() {
-  const { data: user} = useLoadUserQuery();
-  console.log(user)
-  
   return (
     <>
       <div>
         <Header/>
         {/* <SocketProvider> */}
+        <UserProvider>
           <Routes>
             <Route path='/' element={<Home/>}></Route>
             <Route path='/single' element={<SingleChat/>}></Route>
@@ -28,6 +26,7 @@ function App() {
             <Route path='/rtc' element={<WebRTC/>}></Route>
             <Route path='/room/:roomId' element={<Room/>}></Route>
           </Routes>
+        </UserProvider>
         {/* </SocketProvider> */}
       </div>
     </>

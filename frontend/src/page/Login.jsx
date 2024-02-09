@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Input, message } from 'antd';
 import { HiOutlineMail } from "react-icons/hi";
 import { GoLock } from "react-icons/go";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLoginMutation } from '../Redux/slice/anotherAuthSlice';
 import Cookies from 'js-cookie';
 
@@ -27,7 +27,7 @@ const Login = () => {
         if(user?.user?._id){
             messageApi.success("Login Successful")
             setTimeout(()=> {
-                navigate("/");
+                navigate("/single");
             }, 1000);
         }
     }, [user?.user?._id])
@@ -81,7 +81,6 @@ const Login = () => {
                                 outline: "none",
                                 marginBottom: "20px",
                             }}
-                            bordered={false}
                         />
                         <Input.Password
                             name='password'
@@ -97,7 +96,10 @@ const Login = () => {
                                 marginBottom: "20px",
                             }}
                         />
-                        <button type='submit' className='w-full bg-[#0071E3] h-[46px] text-white font-medium rounded-lg'>{ isLoading ? "loading" : "Login" }</button>
+                        <button type='submit' className='w-full mb-5 bg-[#0071E3] h-[46px] text-white font-medium rounded-lg'>{ isLoading ? "loading" : "Login" }</button>
+                        <Link to="/register">
+                            <h4 className='text-[#0071E3] font-semibold text-right'>Create a new Account? Register</h4>
+                        </Link>
                     </form>
                 </div>
             </div>

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { Input, message } from 'antd';
-import { FaAlgolia, FaRegUser } from "react-icons/fa6";
+import {  FaRegUser } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
 import { GoLock } from "react-icons/go";
-import { useNavigate, } from "react-router-dom"
+import { Link, useNavigate, } from "react-router-dom"
 import { useRegisterMutation } from '../Redux/slice/anotherAuthSlice';
 import Cookies from 'js-cookie';
 const Register = () => {
@@ -116,7 +116,10 @@ const Register = () => {
                                 marginBottom: "20px",
                             }}
                         />
-                        <button type='submit' className='w-full bg-[#0071E3] h-[46px] text-white font-medium rounded-lg'>Register</button>
+                        <button type='submit' className='w-full mb-5 bg-[#0071E3] h-[46px] text-white font-medium rounded-lg'>Register</button>
+                        <Link to="/login">
+                            <h4 className='text-[#0071E3] font-semibold text-right'>Already Have account? Login</h4>
+                        </Link>
                     </form>
                 </div>
             </div>

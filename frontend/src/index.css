@@ -21,3 +21,10 @@
   font-size: 16px !important;
   font-weight: 400 !important;
 }
+
+.anticon, .anticon-eye-invisible, .ant-input-password-icon{
+  color: "#0071E3" !important;
+}
+.ant-input-affix-wrapper .anticon.ant-input-password-icon{
+  color: "#0071E3" !important;
+}

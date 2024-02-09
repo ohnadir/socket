@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useState } from 'react';
 import { FaUserCircle } from "react-icons/fa";
 import User from '../utils/Users.json'
@@ -7,9 +7,15 @@ import { io } from "socket.io-client";
 import { useMemo } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { useLoadUserQuery } from '../Redux/slice/anotherAuthSlice';
+import { UserContext, useUser } from '../providers/User';
 
 const SingleChat = () => {
-    const { user } = useSelector(state => state.auth);
+    const user = useUser()
+    // const user = useContext(UserContext);
+    // const { user } = useUser() || {};
+    // const { data: user} = useLoadUserQuery();
+    console.log(user)
     const navigate = useNavigate()
     const [message, setMessage] = useState('');
     const [users, setUsers] = useState([]);
@@ -17,11 +23,11 @@ const SingleChat = () => {
     const filterUsers = users.filter(item => item.userId !== user._id);
     const [room, setRoom] = useState();
 
-    useEffect(()=>{
-        if(!user?._id){
+    /* useEffect(()=>{
+        if(!user?user._id){
             return navigate('/login')
         }
-    }, [user?._id])
+    }, [user?._id]) */
 
     const socket = useMemo(() => io("http://localhost:8080", { withCredentials: true }),[]);
     
@@ -37,6 +43,7 @@ const SingleChat = () => {
             alert("Select Room")
         }
     };
+
     if(user?._id){
         useEffect(() => {
             socket?.emit('addUser', user?._id);
@@ -65,6 +72,7 @@ const SingleChat = () => {
                     gap-6
                 '
             >
+                {/* login user profile */}
                 <div 
                     className='
                         w-[25%] 
@@ -86,7 +94,7 @@ const SingleChat = () => {
                     </div>
                 </div>
 
-
+                {/* input field container */}
                 <div 
                     className='
                         w-[50%] 
@@ -136,7 +144,7 @@ const SingleChat = () => {
                 </div>
 
 
-
+                {/* others user */}
                 <div 
                     className={`
                         w-[25%] 

@@ -1,9 +1,9 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useContext } from 'react'
 import { io } from "socket.io-client"
 const SocketContext = React.createContext(null);
 
 export const useSocket= ()=>{
-    return React.useContext(SocketContext)
+    return useContext(SocketContext)
 }
 
 export const SocketProvider = (props)=>{
