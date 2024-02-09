@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useLoadUserQuery } from '../Redux/slice/anotherAuthSlice';
 export  const UserContext = React.createContext(null);
 
@@ -8,11 +8,16 @@ export const useUser= ()=>{
 
 export const UserProvider = (props)=>{
     const { data: users, isLoading} = useLoadUserQuery();
+    const [user, setUser] = useState(null);
+    useEffect(()=>{
+        setUser(users?.user)
+    }, [users?.user])
     if (isLoading) {
         return <p>Loading user data...</p>;
     }
+    console.log(user)
     return(
-        <UserContext.Provider value={users?.user}>
+        <UserContext.Provider value={{ user, setUser }}>
             {props.children}
         </UserContext.Provider>
     )

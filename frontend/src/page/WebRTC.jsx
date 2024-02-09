@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { Input } from 'antd';
 import { HiOutlineMail } from "react-icons/hi";
 import { FaRestroom } from "react-icons/fa6";
-import { io } from "socket.io-client"
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import { useSocket } from '../providers/Sockets';
 const WebRTC = () => {
-    const socket = useMemo(() => io("http://localhost:8080", { withCredentials: true }),[]);
+    const socket = useSocket();
     const peer = useMemo(()=> new RTCPeerConnection({
         iceServers: [
             {
@@ -34,13 +34,20 @@ const WebRTC = () => {
         socket?.emit('join-room', {emailId: auth?.email, roomId: auth?.room});
     }
 
-    const handleRoomJoined = ({roomId})=>{
+    const handleRoomJoined =useCallback( ({roomId})=>{
         navigate(`/room/${roomId}`)
-    }
+    }, [navigate])
+    
     useEffect(() => {
         socket.on('joined-room', data=>{ 
             handleRoomJoined(data)
-        } )
+        } );
+
+        return ()=>{
+            socket.off("joined-room", data=>{ 
+                handleRoomJoined(data)
+            });
+        }
     }, [socket]);
 
     return (

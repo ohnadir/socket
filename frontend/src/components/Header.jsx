@@ -8,7 +8,9 @@ import Cookies from 'js-cookie';
 const Header = () => {
     const navigate = useNavigate()
     const handleLogout=()=>{
+        Cookies.remove('token')
         navigate('/login', { replace: true })
+        
     }
     return (
         <div className="bg-[#0071E3] p-4  text-white">

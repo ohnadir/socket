@@ -15,19 +15,19 @@ function App() {
     <>
       <div>
         <Header/>
-        {/* <SocketProvider> */}
-        <UserProvider>
-          <Routes>
-            <Route path='/' element={<Home/>}></Route>
-            <Route path='/single' element={<SingleChat/>}></Route>
-            <Route path='/group' element={<GroupChat/>}></Route>
-            <Route path='/login' element={<Login/>}></Route>
-            <Route path='/register' element={<Register/>}></Route>
-            <Route path='/rtc' element={<WebRTC/>}></Route>
-            <Route path='/room/:roomId' element={<Room/>}></Route>
-          </Routes>
-        </UserProvider>
-        {/* </SocketProvider> */}
+        <SocketProvider>
+          <UserProvider>
+            <Routes>
+              <Route path='/' element={<Home/>}></Route>
+              <Route path='/single' element={<SingleChat/>}></Route>
+              <Route path='/group' element={<GroupChat/>}></Route>
+              <Route path='/login' element={<Login/>}></Route>
+              <Route path='/register' element={<Register/>}></Route>
+              <Route path='/rtc' element={<WebRTC/>}></Route>
+              <Route path='/room/:roomId' element={<Room/>}></Route>
+            </Routes>
+          </UserProvider>
+        </SocketProvider>
       </div>
     </>
   )

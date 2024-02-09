@@ -1,35 +1,28 @@
 import React, { useContext } from 'react'
 import { useState } from 'react';
-import { FaUserCircle } from "react-icons/fa";
-import User from '../utils/Users.json'
 import { useEffect } from 'react';
 import { io } from "socket.io-client";
 import { useMemo } from 'react';
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useLoadUserQuery } from '../Redux/slice/anotherAuthSlice';
-import { UserContext, useUser } from '../providers/User';
+import { useUser } from '../providers/User';
+import { useSocket } from '../providers/Sockets';
 
 const SingleChat = () => {
-    const user = useUser()
-    // const user = useContext(UserContext);
-    // const { user } = useUser() || {};
-    // const { data: user} = useLoadUserQuery();
+    const user = useUser();
     console.log(user)
-    const navigate = useNavigate()
+    const socket = useSocket()
+    const navigate = useNavigate();
     const [message, setMessage] = useState('');
     const [users, setUsers] = useState([]);
     const [allMessages, setAllMessages]=useState([]);
-    const filterUsers = users.filter(item => item.userId !== user._id);
+    const filterUsers = users.filter(item => item.userId !== user?._id);
     const [room, setRoom] = useState();
 
-    /* useEffect(()=>{
-        if(!user?user._id){
+    useEffect(()=>{
+        if(!user?.user?._id){
             return navigate('/login')
         }
-    }, [user?._id]) */
-
-    const socket = useMemo(() => io("http://localhost:8080", { withCredentials: true }),[]);
+    }, [user?.user?._id])
     
     const handleSubmit = () => {
         if(room){
@@ -44,9 +37,9 @@ const SingleChat = () => {
         }
     };
 
-    if(user?._id){
+    if(user?.user?._id){
         useEffect(() => {
-            socket?.emit('addUser', user?._id);
+            socket?.emit('addUser', user?.user?._id);
             socket?.on('getUsers', users => {
                 setUsers(users)
             })

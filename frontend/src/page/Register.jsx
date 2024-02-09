@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Input, message } from 'antd';
 import {  FaRegUser } from "react-icons/fa6";
 import { HiOutlineMail } from "react-icons/hi";
@@ -6,8 +6,10 @@ import { GoLock } from "react-icons/go";
 import { Link, useNavigate, } from "react-router-dom"
 import { useRegisterMutation } from '../Redux/slice/anotherAuthSlice';
 import Cookies from 'js-cookie';
+import { UserContext } from '../providers/User';
 const Register = () => {
     const [auth, setAuth] = useState();
+    const { setUser } = useContext(UserContext);
     const [ register, { isLoading, isError, data: user, error} ]= useRegisterMutation();
 
     const navigate = useNavigate();
@@ -18,7 +20,8 @@ const Register = () => {
     }
 
     if(user?.token){
-        Cookies.set('token', (user?.token), { expires: 7 })
+        Cookies.set('token', (user?.token), { expires: 7 });
+        setUser(user?.user)
     }
     
     const handleSubmit=(e)=>{

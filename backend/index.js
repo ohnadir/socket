@@ -68,8 +68,14 @@ io.on('connection', async (socket) => {
         const fromEmail = socketToEmailMapping.get(socket.id); 
         const socketId = emailToSocketMapping.get(emailId);
         console.log(socketId);
-        console.log("incomming-call", fromEmail, offer)
-        socket.to(socketId).emit('incomming-call', { from : fromEmail, offer})
+        console.log("incoming-call", fromEmail, offer)
+        socket.to(socketId).emit('incoming-call', { from : fromEmail, offer})
+    })
+
+    socket.on("call-accepted", data=>{
+        const { emailId, ans } = data;
+        const socketId = emailToSocketMapping.get(emailId);
+        socket.to(socketId).emit('call-accepted', { ans})
     })
 
     // send message
